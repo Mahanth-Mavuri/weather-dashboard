@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Sun, CloudSun, CloudRain, SunMedium } from 'lucide-react';
+import { MapPin, Sun, CloudSun, SunMedium } from 'lucide-react';
 
 export function CurrentWeather({ weatherData }) {
   const {
@@ -9,7 +9,9 @@ export function CurrentWeather({ weatherData }) {
     high = 25,
     low = 16,
     condition = 'Partly Cloudy',
-    description = 'Mild breeze with pleasant sunshine',
+    conditionIcon: ConditionIconComponent = CloudSun,
+    conditionIconColor = '#6366f1',
+    description = 'Live weather conditions',
     unit = '°C'
   } = weatherData || {};
 
@@ -40,7 +42,7 @@ export function CurrentWeather({ weatherData }) {
           </div>
         </div>
         <div className="weather-hero-icon">
-          <CloudSun size={90} />
+          <ConditionIconComponent size={90} style={{ color: conditionIconColor }} />
         </div>
       </div>
 
@@ -51,3 +53,4 @@ export function CurrentWeather({ weatherData }) {
     </div>
   );
 }
+

@@ -30,7 +30,7 @@ export function ForecastGrid({ forecastList }) {
               <div className="forecast-day">{item.day}</div>
               <div className="forecast-date">{item.date}</div>
               <div className="forecast-icon">
-                <IconComponent size={36} style={{ color: '#f59e0b' }} />
+                <IconComponent size={36} style={{ color: item.iconColor || '#f59e0b' }} />
               </div>
               <div className="forecast-temp">
                 {item.tempHigh}{' '}

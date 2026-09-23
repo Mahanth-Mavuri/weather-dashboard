@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Loader2 } from 'lucide-react';
 
-export function SearchBar({ onSearch, currentCity }) {
+export function SearchBar({ onSearch, isLoading }) {
   const [query, setQuery] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (query.trim()) {
-      onSearch(query.trim());
-    }
+    // Call onSearch with query (App.jsx will validate empty string error)
+    onSearch(query);
   };
 
   const popularCities = ['San Francisco', 'London', 'Tokyo', 'Sydney', 'New York'];
@@ -24,11 +23,21 @@ export function SearchBar({ onSearch, currentCity }) {
             placeholder="Search city (e.g., London, Tokyo, New York)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            disabled={isLoading}
           />
         </div>
-        <button type="submit" className="search-btn">
-          <Search size={18} />
-          Search
+        <button type="submit" className="search-btn" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <Loader2 size={18} className="spinner" />
+              Searching...
+            </>
+          ) : (
+            <>
+              <Search size={18} />
+              Search
+            </>
+          )}
         </button>
       </form>
 
@@ -39,6 +48,7 @@ export function SearchBar({ onSearch, currentCity }) {
             key={city}
             type="button"
             className="city-chip"
+            disabled={isLoading}
             onClick={() => {
               setQuery(city);
               onSearch(city);

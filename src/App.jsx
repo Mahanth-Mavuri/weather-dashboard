@@ -1,106 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { SearchBar } from './components/SearchBar';
 import { CurrentWeather } from './components/CurrentWeather';
 import { WeatherDetails } from './components/WeatherDetails';
 import { ForecastGrid } from './components/ForecastGrid';
+import { fetchWeatherData } from './services/weatherApi';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 export default function App() {
-  // Simple state for city search and current weather demonstration
   const [city, setCity] = useState('San Francisco');
+  const [weatherData, setWeatherData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Placeholder data dictionary for quick city selection simulation
-  const cityMockData = {
-    'San Francisco': {
-      city: 'San Francisco, US',
-      date: 'Monday, Sep 21',
-      temperature: 22,
-      high: 25,
-      low: 16,
-      condition: 'Partly Cloudy',
-      description: 'Mild breeze with pleasant sunshine throughout the day.',
-      humidity: 64,
-      windSpeed: '14 km/h',
-      windDirection: 'NW',
-      uvIndex: '5 (Moderate)',
-      visibility: '10 km'
-    },
-    'London': {
-      city: 'London, UK',
-      date: 'Monday, Sep 21',
-      temperature: 17,
-      high: 19,
-      low: 12,
-      condition: 'Light Rain',
-      description: 'Occasional light showers expected with cool winds.',
-      humidity: 82,
-      windSpeed: '22 km/h',
-      windDirection: 'SW',
-      uvIndex: '3 (Low)',
-      visibility: '8 km'
-    },
-    'Tokyo': {
-      city: 'Tokyo, JP',
-      date: 'Monday, Sep 21',
-      temperature: 26,
-      high: 28,
-      low: 21,
-      condition: 'Sunny',
-      description: 'Clear blue skies with warm sunshine and gentle breeze.',
-      humidity: 55,
-      windSpeed: '10 km/h',
-      windDirection: 'NE',
-      uvIndex: '7 (High)',
-      visibility: '12 km'
-    },
-    'Sydney': {
-      city: 'Sydney, AU',
-      date: 'Monday, Sep 21',
-      temperature: 20,
-      high: 23,
-      low: 15,
-      condition: 'Mostly Sunny',
-      description: 'Pleasant spring weather with low chances of precipitation.',
-      humidity: 58,
-      windSpeed: '18 km/h',
-      windDirection: 'SE',
-      uvIndex: '6 (High)',
-      visibility: '10 km'
-    },
-    'New York': {
-      city: 'New York, US',
-      date: 'Monday, Sep 21',
-      temperature: 24,
-      high: 27,
-      low: 18,
-      condition: 'Clear Sky',
-      description: 'Bright sunshine with mild comfortable humidity levels.',
-      humidity: 50,
-      windSpeed: '12 km/h',
-      windDirection: 'W',
-      uvIndex: '6 (High)',
-      visibility: '10 km'
+  const loadWeather = async (targetCity) => {
+    if (!targetCity || !targetCity.trim()) {
+      setError('Please enter a city name before searching.');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchWeatherData(targetCity);
+      setWeatherData(data);
+      setCity(data.cityNameOnly || targetCity);
+    } catch (err) {
+      setError(err.message || 'An error occurred while fetching weather data.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Get data for current city or fallback dynamically
-  const activeWeatherData = cityMockData[city] || {
-    city: `${city}, Global`,
-    date: 'Monday, Sep 21',
-    temperature: 23,
-    high: 26,
-    low: 17,
-    condition: 'Partly Cloudy',
-    description: `Current simulated weather conditions for ${city}.`,
-    humidity: 60,
-    windSpeed: '15 km/h',
-    windDirection: 'N',
-    uvIndex: '5 (Moderate)',
-    visibility: '10 km'
-  };
+  useEffect(() => {
+    loadWeather('San Francisco');
+  }, []);
 
   const handleSearch = (searchedCity) => {
-    setCity(searchedCity);
+    loadWeather(searchedCity);
   };
 
   return (
@@ -109,31 +47,49 @@ export default function App() {
       <Navbar />
 
       {/* 2. City Search Bar */}
-      <SearchBar onSearch={handleSearch} currentCity={city} />
+      <SearchBar onSearch={handleSearch} isLoading={loading} />
 
-      {/* 3. Dashboard Core Layout */}
-      <main className="dashboard-grid">
-        {/* Current Weather Section */}
-        <CurrentWeather weatherData={activeWeatherData} />
+      {/* Error Alert Message */}
+      {error && (
+        <div className="glass-panel error-banner">
+          <AlertCircle size={20} className="error-icon" />
+          <span>{error}</span>
+        </div>
+      )}
 
-        {/* Detailed Metrics (Humidity, Wind, UV, Visibility) */}
-        <WeatherDetails
-          details={{
-            humidity: activeWeatherData.humidity,
-            windSpeed: activeWeatherData.windSpeed,
-            windDirection: activeWeatherData.windDirection,
-            uvIndex: activeWeatherData.uvIndex,
-            visibility: activeWeatherData.visibility
-          }}
-        />
-      </main>
+      {/* Loading State or Dashboard Content */}
+      {loading ? (
+        <div className="glass-panel loading-container">
+          <Loader2 size={40} className="spinner" />
+          <p>Fetching real-time weather from Open-Meteo...</p>
+        </div>
+      ) : weatherData ? (
+        <>
+          {/* 3. Dashboard Core Layout */}
+          <main className="dashboard-grid">
+            {/* Current Weather Section */}
+            <CurrentWeather weatherData={weatherData} />
 
-      {/* 4. 5-Day Forecast Grid */}
-      <ForecastGrid />
+            {/* Detailed Metrics (Humidity, Wind, UV, Visibility) */}
+            <WeatherDetails
+              details={{
+                humidity: weatherData.humidity,
+                windSpeed: weatherData.windSpeed,
+                windDirection: weatherData.windDirection,
+                uvIndex: weatherData.uvIndex,
+                visibility: weatherData.visibility
+              }}
+            />
+          </main>
+
+          {/* 4. 5-Day Forecast Grid */}
+          <ForecastGrid forecastList={weatherData.forecastList} />
+        </>
+      ) : null}
 
       {/* Footer */}
       <footer className="app-footer">
-        SkyPulse Weather Dashboard &bull; Designed with <span>React & Vite</span>
+        SkyPulse Weather Dashboard &bull; Powered by <span>Open-Meteo API</span>
       </footer>
     </div>
   );

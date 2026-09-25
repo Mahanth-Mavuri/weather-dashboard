@@ -1,5 +1,6 @@
 import React from 'react';
-import { MapPin, Sun, CloudSun, SunMedium } from 'lucide-react';
+import { MapPin, SunMedium } from 'lucide-react';
+import { getWeatherInfo } from '../utils/wmoCodes';
 
 export function CurrentWeather({ weatherData }) {
   const {
@@ -8,12 +9,12 @@ export function CurrentWeather({ weatherData }) {
     temperature = 22,
     high = 25,
     low = 16,
-    condition = 'Partly Cloudy',
-    conditionIcon: ConditionIconComponent = CloudSun,
-    conditionIconColor = '#6366f1',
-    description = 'Live weather conditions',
-    unit = '°C'
+    wmoCode = 1,
+    unit = '°C',
   } = weatherData || {};
+
+  const weatherInfo = getWeatherInfo(wmoCode);
+  const WeatherIcon = weatherInfo.icon;
 
   return (
     <div className="glass-panel current-weather-card">
@@ -27,7 +28,7 @@ export function CurrentWeather({ weatherData }) {
         </div>
         <div className="weather-status-pill">
           <SunMedium size={16} />
-          {condition}
+          Live Weather
         </div>
       </div>
 
@@ -36,21 +37,20 @@ export function CurrentWeather({ weatherData }) {
           {temperature}{unit}
         </div>
         <div className="weather-condition-group">
-          <div className="condition-name">{condition}</div>
+          <div className="condition-name">{weatherInfo.description}</div>
           <div className="temp-range">
             High: {high}{unit} &bull; Low: {low}{unit}
           </div>
         </div>
         <div className="weather-hero-icon">
-          <ConditionIconComponent size={90} style={{ color: conditionIconColor }} />
+          <WeatherIcon size={90} style={{ color: weatherInfo.color }} />
         </div>
       </div>
 
       <div className="weather-footer-summary">
-        <Sun size={16} style={{ color: '#f59e0b' }} />
-        <span>Today's Outlook: {description}</span>
+        <WeatherIcon size={16} style={{ color: weatherInfo.color }} />
+        <span>Current Condition: {weatherInfo.description}</span>
       </div>
     </div>
   );
 }
-

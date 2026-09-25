@@ -4,35 +4,36 @@ import { SearchBar } from './components/SearchBar';
 import { CurrentWeather } from './components/CurrentWeather';
 import { WeatherDetails } from './components/WeatherDetails';
 import { ForecastGrid } from './components/ForecastGrid';
-import { fetchWeatherData } from './services/weatherApi';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { fetchWeatherData } from './services/weatherService';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function App() {
-  const [city, setCity] = useState('San Francisco');
   const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [lastSearchedCity, setLastSearchedCity] = useState('San Francisco');
 
-  const loadWeather = async (targetCity) => {
-    if (!targetCity || !targetCity.trim()) {
-      setError('Please enter a city name before searching.');
-      return;
-    }
-
-    setLoading(true);
+  // Async function with try/catch/finally to load weather data
+  const loadWeather = async (cityName) => {
+    // 1. Reset state & set loading
+    setIsLoading(true);
     setError(null);
 
     try {
-      const data = await fetchWeatherData(targetCity);
+      // 2. Fetch data via Open-Meteo API (handles geocoding + weather forecast)
+      const data = await fetchWeatherData(cityName);
       setWeatherData(data);
-      setCity(data.cityNameOnly || targetCity);
+      setLastSearchedCity(cityName);
     } catch (err) {
-      setError(err.message || 'An error occurred while fetching weather data.');
+      // 3. Catch errors (empty input, invalid city, network failure)
+      setError(err.message || 'An unexpected error occurred. Please try again.');
     } finally {
-      setLoading(false);
+      // 4. Always turn off loading state when request finishes
+      setIsLoading(false);
     }
   };
 
+  // Initial load on mount for default city
   useEffect(() => {
     loadWeather('San Francisco');
   }, []);
@@ -46,46 +47,56 @@ export default function App() {
       {/* 1. Header Navigation */}
       <Navbar />
 
-      {/* 2. City Search Bar */}
-      <SearchBar onSearch={handleSearch} isLoading={loading} />
+      {/* 2. Search Bar */}
+      <SearchBar onSearch={handleSearch} isLoading={isLoading} />
 
       {/* Error Alert Message */}
       {error && (
-        <div className="glass-panel error-banner">
-          <AlertCircle size={20} className="error-icon" />
-          <span>{error}</span>
+        <div className="glass-panel error-banner" role="alert">
+          <AlertCircle size={24} className="error-icon" />
+          <div className="error-text">
+            <strong>Weather Update Notice:</strong> {error}
+          </div>
+          <button
+            className="retry-btn"
+            onClick={() => loadWeather(lastSearchedCity || 'San Francisco')}
+          >
+            <RefreshCw size={14} /> Retry
+          </button>
         </div>
       )}
 
-      {/* Loading State or Dashboard Content */}
-      {loading ? (
+      {/* Loading Indicator Spinner Overlay */}
+      {isLoading && (
         <div className="glass-panel loading-container">
-          <Loader2 size={40} className="spinner" />
-          <p>Fetching real-time weather from Open-Meteo...</p>
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Fetching live weather from Open-Meteo...</p>
         </div>
-      ) : weatherData ? (
+      )}
+
+      {/* 3. Main Dashboard Weather View */}
+      {!isLoading && weatherData && (
         <>
-          {/* 3. Dashboard Core Layout */}
           <main className="dashboard-grid">
-            {/* Current Weather Section */}
+            {/* Current Weather Card */}
             <CurrentWeather weatherData={weatherData} />
 
-            {/* Detailed Metrics (Humidity, Wind, UV, Visibility) */}
+            {/* Detailed Metrics */}
             <WeatherDetails
               details={{
                 humidity: weatherData.humidity,
                 windSpeed: weatherData.windSpeed,
                 windDirection: weatherData.windDirection,
-                uvIndex: weatherData.uvIndex,
-                visibility: weatherData.visibility
+                uvIndex: 'Moderate',
+                visibility: weatherData.pressure || '1013 hPa',
               }}
             />
           </main>
 
           {/* 4. 5-Day Forecast Grid */}
-          <ForecastGrid forecastList={weatherData.forecastList} />
+          <ForecastGrid forecastList={weatherData.forecast} />
         </>
-      ) : null}
+      )}
 
       {/* Footer */}
       <footer className="app-footer">

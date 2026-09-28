@@ -153,7 +153,7 @@ body {
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .search-form {
@@ -233,29 +233,39 @@ body {
   transform: none;
 }
 
+/* Chips & Quick Cities */
 .quick-cities {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-cities-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.chip-list {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.quick-cities-label {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  font-weight: 600;
-}
-
 .city-chip {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--card-border);
   color: var(--text-muted);
-  padding: 4px 12px;
+  padding: 5px 13px;
   border-radius: 14px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
+  font-family: inherit;
 }
 
 .city-chip:hover:not(:disabled) {
@@ -267,6 +277,50 @@ body {
 .city-chip:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Recent Cities Specific Styling */
+.recent-cities-group {
+  padding-bottom: 12px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.recent-cities-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-history-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color var(--transition-fast);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.clear-history-btn:hover:not(:disabled) {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.recent-chip {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.25);
+  color: #c7d2fe;
+}
+
+.recent-chip:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.3);
+  color: #fff;
+  border-color: rgba(99, 102, 241, 0.5);
 }
 
 /* Error Banner Styling */

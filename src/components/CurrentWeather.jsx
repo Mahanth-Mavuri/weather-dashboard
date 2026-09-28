@@ -1,11 +1,12 @@
 import React from 'react';
-import { MapPin, SunMedium } from 'lucide-react';
+import { MapPin, SunMedium, Clock } from 'lucide-react';
 import { getWeatherInfo } from '../utils/wmoCodes';
 
 export function CurrentWeather({ weatherData }) {
   const {
     city = 'San Francisco, US',
     date = 'Monday, Sep 21',
+    lastUpdated,
     temperature = 22,
     high = 25,
     low = 16,
@@ -24,7 +25,15 @@ export function CurrentWeather({ weatherData }) {
             <MapPin size={24} style={{ color: '#6366f1' }} />
             {city}
           </h2>
-          <p className="location-date">{date}</p>
+          <p className="location-date">
+            {date}
+            {lastUpdated && (
+              <span className="last-updated-tag">
+                <Clock size={12} style={{ display: 'inline', marginLeft: '8px', marginRight: '3px' }} />
+                Updated at {lastUpdated}
+              </span>
+            )}
+          </p>
         </div>
         <div className="weather-status-pill">
           <SunMedium size={16} />

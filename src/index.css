@@ -406,6 +406,12 @@ body {
   margin-top: 4px;
 }
 
+.last-updated-tag {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
 .weather-status-pill {
   background: rgba(245, 158, 11, 0.15);
   border: 1px solid rgba(245, 158, 11, 0.3);
@@ -572,23 +578,12 @@ body {
   gap: 14px;
 }
 
-@media (max-width: 768px) {
-  .forecast-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 480px) {
-  .forecast-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .forecast-card {
-  padding: 20px 14px;
+  padding: 18px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: center;
   background: rgba(15, 23, 42, 0.4);
   border: 1px solid var(--card-border);
@@ -597,13 +592,20 @@ body {
 }
 
 .forecast-card:hover {
-  background: rgba(30, 41, 59, 0.8);
+  background: rgba(30, 41, 59, 0.85);
   transform: translateY(-4px);
   border-color: rgba(99, 102, 241, 0.4);
 }
 
+.forecast-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
 .forecast-day {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-main);
 }
@@ -614,26 +616,103 @@ body {
 }
 
 .forecast-icon {
-  width: 40px;
-  height: 40px;
-  margin: 4px 0;
-}
-
-.forecast-temp {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.forecast-low {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-weight: 500;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px 0;
 }
 
 .forecast-condition {
   font-size: 0.78rem;
   color: var(--text-muted);
+  font-weight: 500;
+  min-height: 2.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.forecast-temp-group {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.forecast-temp-max {
+  color: var(--text-main);
+}
+
+.forecast-temp-min {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.forecast-precip-badge {
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  color: #38bdf8;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.precip-icon {
+  color: #38bdf8;
+}
+
+/* Responsive Grid Adjustments */
+@media (max-width: 1024px) {
+  .forecast-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 860px) {
+  .forecast-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .forecast-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .app-container {
+    padding: 16px 12px 40px;
+  }
+  .search-form {
+    flex-direction: column;
+  }
+  .search-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .location-title {
+    font-size: 1.4rem;
+  }
+  .temp-large {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .forecast-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Footer */

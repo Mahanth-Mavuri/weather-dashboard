@@ -54,7 +54,7 @@ export async function fetchWeatherData(cityName) {
   const { latitude, longitude, name, country } = location;
 
   // 2. Fetch Weather Forecast Data from Open-Meteo
-  const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
+  const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`;
 
   let weatherResponse;
   try {
@@ -76,16 +76,21 @@ export async function fetchWeatherData(cityName) {
   const forecastDaysCount = Math.min(5, daily.time.length);
   for (let i = 0; i < forecastDaysCount; i++) {
     const { day, date } = formatForecastDate(daily.time[i]);
+    const precipProb = daily.precipitation_probability_max
+      ? Math.round(daily.precipitation_probability_max[i] || 0)
+      : 0;
+
     forecastList.push({
       day,
       date,
       wmoCode: daily.weather_code[i],
       tempHigh: `${Math.round(daily.temperature_2m_max[i])}°C`,
       tempLow: `${Math.round(daily.temperature_2m_min[i])}°C`,
+      precipitationProbability: precipProb,
     });
   }
 
-  // Format current date
+  // Format current date and timestamp
   const now = new Date();
   const currentDateFormatted = now.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -93,9 +98,15 @@ export async function fetchWeatherData(cityName) {
     day: 'numeric',
   });
 
+  const lastUpdatedFormatted = now.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return {
     city: `${name}${country ? `, ${country}` : ''}`,
     date: currentDateFormatted,
+    lastUpdated: lastUpdatedFormatted,
     temperature: Math.round(current.temperature_2m),
     high: Math.round(daily.temperature_2m_max[0]),
     low: Math.round(daily.temperature_2m_min[0]),

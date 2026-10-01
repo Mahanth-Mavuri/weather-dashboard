@@ -18,31 +18,31 @@ export function CurrentWeather({ weatherData }) {
   const WeatherIcon = weatherInfo.icon;
 
   return (
-    <div className="glass-panel current-weather-card">
+    <article className="glass-panel current-weather-card" aria-label={`Current weather for ${city}`}>
       <div className="weather-header">
         <div>
           <h2 className="location-title">
-            <MapPin size={24} style={{ color: '#6366f1' }} />
+            <MapPin size={24} style={{ color: '#6366f1' }} aria-hidden="true" />
             {city}
           </h2>
           <p className="location-date">
             {date}
             {lastUpdated && (
-              <span className="last-updated-tag">
-                <Clock size={12} style={{ display: 'inline', marginLeft: '8px', marginRight: '3px' }} />
+              <span className="last-updated-tag" aria-label={`Last updated at ${lastUpdated}`}>
+                <Clock size={12} style={{ display: 'inline', marginLeft: '8px', marginRight: '3px' }} aria-hidden="true" />
                 Updated at {lastUpdated}
               </span>
             )}
           </p>
         </div>
-        <div className="weather-status-pill">
-          <SunMedium size={16} />
+        <div className="weather-status-pill" aria-label="Live weather status">
+          <SunMedium size={16} aria-hidden="true" />
           Live Weather
         </div>
       </div>
 
       <div className="weather-body">
-        <div className="temp-large">
+        <div className="temp-large" aria-label={`Current temperature ${temperature} degrees Celsius`}>
           {temperature}{unit}
         </div>
         <div className="weather-condition-group">
@@ -51,15 +51,15 @@ export function CurrentWeather({ weatherData }) {
             High: {high}{unit} &bull; Low: {low}{unit}
           </div>
         </div>
-        <div className="weather-hero-icon">
+        <div className="weather-hero-icon" aria-hidden="true">
           <WeatherIcon size={90} style={{ color: weatherInfo.color }} />
         </div>
       </div>
 
       <div className="weather-footer-summary">
-        <WeatherIcon size={16} style={{ color: weatherInfo.color }} />
+        <WeatherIcon size={16} style={{ color: weatherInfo.color }} aria-hidden="true" />
         <span>Current Condition: {weatherInfo.description}</span>
       </div>
-    </div>
+    </article>
   );
 }

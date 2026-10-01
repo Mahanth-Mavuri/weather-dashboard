@@ -50,7 +50,7 @@ export default function App() {
       setWeatherData(data);
       setLastSearchedCity(cityName);
 
-      // Extract city name for recent history (e.g., "Hyderabad" from "Hyderabad, India")
+      // Extract city name for recent history (e.g. "Hyderabad" from "Hyderabad, India")
       const savedCityName = data.city ? data.city.split(',')[0].trim() : cityName.trim();
 
       // Update recent searches list (max 5, no duplicates)
@@ -101,34 +101,36 @@ export default function App() {
         onClearHistory={handleClearHistory}
       />
 
-      {/* Error Alert Message */}
+      {/* Error Alert Banner */}
       {error && (
-        <div className="glass-panel error-banner" role="alert">
-          <AlertCircle size={24} className="error-icon" />
+        <div className="glass-panel error-banner" role="alert" aria-live="assertive">
+          <AlertCircle size={24} className="error-icon" aria-hidden="true" />
           <div className="error-text">
-            <strong>Weather Update Notice:</strong> {error}
+            <strong>Notice:</strong> {error}
           </div>
           <button
+            type="button"
             className="retry-btn"
             onClick={() => loadWeather(lastSearchedCity || 'San Francisco')}
+            aria-label="Retry fetching weather for last city"
           >
-            <RefreshCw size={14} /> Retry
+            <RefreshCw size={14} aria-hidden="true" /> Retry
           </button>
         </div>
       )}
 
-      {/* Loading Indicator Spinner Overlay */}
+      {/* Loading Indicator Spinner & Skeleton Card */}
       {isLoading && (
-        <div className="glass-panel loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Fetching live weather from Open-Meteo...</p>
+        <div className="glass-panel loading-container" role="status" aria-live="polite">
+          <div className="loading-spinner" aria-hidden="true"></div>
+          <p className="loading-text">Fetching live weather data from Open-Meteo...</p>
         </div>
       )}
 
       {/* 3. Main Dashboard Weather View */}
       {!isLoading && weatherData && (
-        <>
-          <main className="dashboard-grid">
+        <main className="dashboard-main">
+          <div className="dashboard-grid">
             {/* Current Weather Card */}
             <CurrentWeather weatherData={weatherData} />
 
@@ -142,15 +144,15 @@ export default function App() {
                 visibility: weatherData.pressure || '1013 hPa',
               }}
             />
-          </main>
+          </div>
 
           {/* 4. 5-Day Forecast Grid */}
           <ForecastGrid forecastList={weatherData.forecast} />
-        </>
+        </main>
       )}
 
       {/* Footer */}
-      <footer className="app-footer">
+      <footer className="app-footer" role="contentinfo">
         SkyPulse Weather Dashboard &bull; Powered by <span>Open-Meteo API</span>
       </footer>
     </div>

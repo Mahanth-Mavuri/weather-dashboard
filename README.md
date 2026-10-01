@@ -79,7 +79,7 @@ Screenshots of the application will be added here.
 
 ## Live Demo
 
-Live demo will be added after deployment.
+[Live demo will be added after deployment.](https://weather-dashboard-lemon-theta.vercel.app/)
 
 ## Repository
 

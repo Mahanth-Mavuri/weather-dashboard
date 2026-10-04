@@ -1,94 +1,85 @@
-# Weather Dashboard
+# Weather Dashboard 🌤️
 
-A responsive weather dashboard built with React and the Open-Meteo API.
+A responsive weather dashboard built with **React** and the **Open-Meteo API**.
 
-The application allows users to search for cities and view current weather conditions, a 5-day forecast, weather details, and recent search history.
+The application allows users to search for cities and view current weather conditions, a 5-day forecast, detailed weather information, and recent search history.
 
-## Features
+## 🌐 Live Demo
 
-- Search weather by city
-- Current weather information
-- 5-day weather forecast
-- Temperature, humidity and wind information
-- Weather condition icons
-- Recent city search history
-- Loading state
-- Error handling
-- Responsive design for desktop, tablet and mobile
+[🚀 View Live Demo](https://weather-dashboard-lemon-theta.vercel.app/)
 
-## Tech Stack
+## 💻 GitHub Repository
 
-- React
-- JavaScript
-- Vite
-- CSS
-- Open-Meteo API
-- Lucide Icons
-- LocalStorage
-- Git & GitHub
+[📂 View Source Code](https://github.com/Mahanth-Mavuri/weather-dashboard)
 
-## Installation
+---
 
-### 1. Clone the repository
+## ✨ Features
 
-```bash
-git clone https://github.com/Mahanth-Mavuri/weather-dashboard.git
-```
+- 🔍 Search weather by city
+- 🌡️ Current weather information
+- 📅 5-day weather forecast
+- 💧 Temperature, humidity, and wind information
+- 🌤️ Weather condition icons
+- 🕘 Recent city search history
+- ⏳ Loading state
+- ⚠️ Error handling
+- 📱 Responsive design for desktop, tablet, and mobile
+- 💾 Search history stored using LocalStorage
 
-### 2. Enter the project folder
+---
 
-```bash
-cd weather-dashboard
-```
+## 🛠️ Tech Stack
 
-### 3. Install dependencies
+### Frontend
 
-```bash
-npm install
-```
+- **React.js** — User interface
+- **JavaScript** — Application logic
+- **Vite** — Development and build tool
+- **CSS** — Responsive styling
 
-### 4. Start the development server
+### APIs & Libraries
 
-```bash
-npm run dev
-```
+- **Open-Meteo API** — Weather and forecast data
+- **Lucide Icons** — Weather and UI icons
+- **LocalStorage** — Recent search history
 
-The application will be available at the local URL provided by Vite.
+### Tools
 
-## API
+- **Git**
+- **GitHub**
+- **Vercel**
 
-This project uses the Open-Meteo API to retrieve weather information.
+---
 
-### Geocoding API
+## 🏗️ How It Works
 
-The Geocoding API is used to find the latitude and longitude of the searched city.
-
-### Forecast API
-
-The Forecast API is used to retrieve:
-
-- Current temperature
-- Weather condition
-- Humidity
-- Wind speed
-- 5-day weather forecast
-
-## Screenshots
-
-Screenshots of the application will be added here.
-
-## Live Demo
-
-[Live demo will be added after deployment.](https://weather-dashboard-lemon-theta.vercel.app/)
-
-## Repository
-
-[GitHub Repository](https://github.com/Mahanth-Mavuri/weather-dashboard)
-
-## Future Improvements
-
-- Add weather-based backgrounds
-- Add detailed weather charts
-- Add location-based weather
-- Add more forecast information
-- Add dark/light theme support
+```text
+┌──────────────────────────────────────────────┐
+│                  User                        │
+│          Searches for a city                 │
+└──────────────────────┬───────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────┐
+│             Open-Meteo Geocoding             │
+│       Finds city latitude & longitude        │
+└──────────────────────┬───────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────┐
+│              Open-Meteo Forecast             │
+│     Retrieves current & forecast weather     │
+└──────────────────────┬───────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────┐
+│              React Dashboard                 │
+│  Temperature • Humidity • Wind • Forecast   │
+└──────────────────────┬───────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────┐
+│                 LocalStorage                 │
+│           Saves recent searches              │
+└──────────────────────────────────────────────┘
